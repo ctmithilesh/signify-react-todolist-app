@@ -3,12 +3,14 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Cookies from "universal-cookie";
 const LoginForm = () => {
 
     const navigate = useNavigate()
     const title = "Login";
-    const description = "Please Login";
+    const description = "Click here to Register";
+    const cookies = new Cookies()
 
     const formSchema = yup.object({
         email: yup.string().required("Email is required"),
@@ -32,6 +34,8 @@ const LoginForm = () => {
             })
                 .then(res => {
                     console.log(res)
+                    cookies.set('user_id', res.data.id)
+                    cookies.set('access_token', res.data.accessToken)
                     navigate('/dashboard')
                 })
                 .catch(err => {
@@ -54,7 +58,7 @@ const LoginForm = () => {
             <div className="hero-content flex-col lg:flex-row-reverse">
                 <div className="text-center lg:text-left">
                     <h1 className="text-5xl font-bold">{title}</h1>
-                    <p className="py-6">{description}</p>
+                    <Link className="py-6" to='/register'>{description}</Link>
                 </div>
                 <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
                     <form className="card-body" onSubmit={handleSubmit(submitData)}>

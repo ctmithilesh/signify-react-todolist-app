@@ -1,20 +1,25 @@
-const API = "https://stingray-app-axdpn.ondigitalocean.app/api/auth/signup";
+const API = "https://stingray-app-axdpn.ondigitalocean.app/api/todo/add";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
-const RegisterForm = () => {
+import Cookies from "universal-cookie";
+import { useNavigate } from "react-router-dom";
 
+
+const AddTodo = () => {
+
+    const cookies = new Cookies()
+    const user_id = cookies.get('user_id')
     const navigate = useNavigate()
-    const title = "Register";
-    const description = "Click here to Login";
-
+    const title = "Add Todo";
+    const description = "Add new Todo here";
     const formSchema = yup.object({
-        username: yup.string().required("Username is required"),
-        email: yup.string().required("Email is required"),
-        password: yup.string().required("Password is required"),
+        todo_title: yup.string().required("Todo Title  is required"),
+        todo_description: yup.string().required("Todo Description is required"),
+        user_id: yup.string().notRequired()
     });
+
     const {
         register,
         handleSubmit,
@@ -25,88 +30,79 @@ const RegisterForm = () => {
 
     const submitData = async (data) => {
         console.log(data)
-        const { username, email, password } = data
+        const { todo_title, todo_description, user_id } = data
         try {
             await axios.post(API, {
-                username,
-                email,
-                password
+                todo_title,
+                todo_description,
+                user_id
             })
                 .then(res => {
                     console.log(res)
-                    navigate('/login')
-
+                    navigate('/dashboard')
                 })
                 .catch(err => {
                     console.log(err)
                 })
-
         }
         catch (e) {
             console.log(e)
         }
+    }
 
-
-    };
 
     return (
         <div className="hero min-h-screen bg-base-200">
             <div className="hero-content flex-col lg:flex-row-reverse">
                 <div className="text-center lg:text-left">
                     <h1 className="text-5xl font-bold">{title}</h1>
-                    <Link className="py-6" to='/login'>{description}</Link>
+                    <p className="py-6">{description}</p>
                 </div>
                 <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
                     <form className="card-body" onSubmit={handleSubmit(submitData)}>
                         <div className="form-control">
                             <label className="label">
-                                <span className="label-text">Username</span>
+                                <span className="label-text">Todo Title </span>
                             </label>
                             <input
                                 type="text"
-                                placeholder="username"
+                                placeholder="Todo Title"
                                 className="input input-bordered"
-                                {...register('username')}
+                                {...register('todo_title')}
                             />
                             <p className="text-red-400">
-                                {errors.username?.message}
+                                {errors.todo_title?.message}
                             </p>
                         </div>
                         <div className="form-control">
                             <label className="label">
-                                <span className="label-text">Email</span>
+                                <span className="label-text">Todo Description</span>
                             </label>
                             <input
-                                type="email"
-                                placeholder="email"
+                                type="text"
+                                placeholder="description"
                                 className="input input-bordered"
-                                {...register('email')}
+                                {...register('todo_description')}
                             />
                             <p className="text-red-400">
-                                {errors.email?.message}
+                                {errors.todo_description?.message}
                             </p>
                         </div>
                         <div className="form-control">
                             <label className="label">
-                                <span className="label-text">Password</span>
+                                <span className="label-text">Todo Description</span>
                             </label>
                             <input
-                                type="password"
-                                placeholder="password"
+                                type="hidden"
+                                value={user_id}
+                                placeholder="description"
                                 className="input input-bordered"
-                                {...register('password')}
+                                {...register('user_id')}
                             />
-                            <p className="text-red-400">
-                                {errors.password?.message}
-                            </p>
-                            {/* <label className="label">
-                                <a href="#" className="label-text-alt link link-hover">
-                                    Forgot password?
-                                </a>
-                            </label> */}
+
                         </div>
                         <div className="form-control mt-6">
-                            <button className="btn btn-primary">Register</button>
+                            <button className="btn btn-primary">Add Todo </button>
                         </div>
                     </form>
                 </div>
@@ -115,4 +111,4 @@ const RegisterForm = () => {
     );
 };
 
-export default RegisterForm;
+export default AddTodo;

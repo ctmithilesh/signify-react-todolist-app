@@ -1,40 +1,61 @@
+import axios from "axios"
+import { useEffect, useState } from "react"
+import Cookies from "universal-cookie"
+import Loading from "./Loading"
 
+const API = 'https://stingray-app-axdpn.ondigitalocean.app/api/todo/find/user'
 
 const TodoTable = () => {
+
+    const [myTodos, setTodos] = useState(null)
+    const todoCondition = myTodos != null && myTodos.length > 0
+
+    const cookies = new Cookies()
+    const user_id = cookies.get('user_id')
+    useEffect(() => {
+
+        fetchAllTodos()
+    });
+
+    const fetchAllTodos = async () => {
+        try {
+            await axios.post(API, { user_id })
+                .then(res => {
+                    console.log(res)
+                    setTodos(res.data)
+                })
+        }
+        catch (e) {
+            console.log(e)
+        }
+
+    }
+
     return (
         <div className="overflow-x-auto">
             <table className="table">
                 {/* head */}
                 <thead>
                     <tr>
-                        <th></th>
-                        <th>Name</th>
-                        <th>Job</th>
-                        <th>Favorite Color</th>
+
+                        <th>Todo Title </th>
+                        <th>Todo Description </th>
+                        <th>Actions </th>
                     </tr>
                 </thead>
                 <tbody>
-                    {/* row 1 */}
-                    <tr>
-                        <th>1</th>
-                        <td>Cy Ganderton</td>
-                        <td>Quality Control Specialist</td>
-                        <td>Blue</td>
-                    </tr>
-                    {/* row 2 */}
-                    <tr>
-                        <th>2</th>
-                        <td>Hart Hagerty</td>
-                        <td>Desktop Support Technician</td>
-                        <td>Purple</td>
-                    </tr>
-                    {/* row 3 */}
-                    <tr>
-                        <th>3</th>
-                        <td>Brice Swyre</td>
-                        <td>Tax Accountant</td>
-                        <td>Red</td>
-                    </tr>
+                    {todoCondition ? myTodos.map((item, index) => (
+
+                        <tr key={index}>
+                            <th>{item.todo_title}</th>
+                            <td>{item.todo_description}</td>
+                            <td> Edit or Delete </td>
+                        </tr>
+
+
+                    )) : <Loading />}
+
+
                 </tbody>
             </table>
         </div>
