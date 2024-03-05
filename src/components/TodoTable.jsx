@@ -2,6 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import Cookies from "universal-cookie"
 import Loading from "./Loading"
+import { Link } from "react-router-dom"
 
 const API = 'https://stingray-app-axdpn.ondigitalocean.app/api/todo/find/user'
 
@@ -15,7 +16,7 @@ const TodoTable = () => {
     useEffect(() => {
 
         fetchAllTodos()
-    });
+    }, [todoCondition]);
 
     const fetchAllTodos = async () => {
         try {
@@ -49,7 +50,13 @@ const TodoTable = () => {
                         <tr key={index}>
                             <th>{item.todo_title}</th>
                             <td>{item.todo_description}</td>
-                            <td> Edit or Delete </td>
+                            <td>
+                                <Link to={`/delete-todo/${item.id}`}>
+                                    Delete
+                                </Link>
+
+
+                            </td>
                         </tr>
 
 

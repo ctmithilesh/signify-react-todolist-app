@@ -3,7 +3,7 @@ import Cookies from "universal-cookie"
 
 const ProtectedRoute = () => {
     const cookies = new Cookies()
-    let user = cookies.get('user')
+    let user = cookies.get('user_id')
     return (
         user ? <Outlet /> : <Navigate to='/login' />
     )

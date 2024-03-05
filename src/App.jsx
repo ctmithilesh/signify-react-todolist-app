@@ -6,6 +6,7 @@ import DashboardPage from './pages/DashboardPage'
 import AddTodoPage from './pages/AddTodoPage'
 import LogoutPage from './pages/LogoutPage'
 import ProtectedRoute from './ProtectedRoute'
+import DeleteTodoPage from './pages/DeleteTodoPage'
 
 function App() {
 
@@ -18,9 +19,13 @@ function App() {
       <Route element={<ProtectedRoute />}>
         <Route exact path='/dashboard' element={<DashboardPage />} />
       </Route>
+
+
       <Route element={<ProtectedRoute />}>
         <Route exact path='/add-todo' element={<AddTodoPage />} />
       </Route>
+
+      <Route exact path='/delete-todo/:id' element={<DeleteTodoPage />} />
 
     </Routes>
   )
